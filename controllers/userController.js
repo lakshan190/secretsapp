@@ -20,8 +20,8 @@ export const createUser = async function (req, res, next) {
 export const loginUser = async function (req, res, next) {
   try {
     const { username, password } = req.body;
-    const foundUser = await User.findOne({ email: username, password });
-    if (foundUser) {
+    const foundUser = await User.findOne({ email: username });
+    if (foundUser.password === password) {
       req.session.userId = foundUser._id;
       console.log(req.session.userId);
       res.render("secrets");
