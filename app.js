@@ -44,8 +44,9 @@ app.use(
 );
 
 // Initialize Passport.js middleware
-app.use(passport.initialize());
-app.use(passport.session());
+//not using this.
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 app.use("/", homeRoute);
 
