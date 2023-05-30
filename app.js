@@ -8,7 +8,6 @@ import mongoose from "mongoose";
 import passport from "passport";
 import { ExpressError } from "./utils/expressError.js";
 import session from "express-session";
-import encrypt from "mongoose-encryption";
 
 import { default as homeRoute } from "./routes/indexRoutes.js";
 
