@@ -6,6 +6,8 @@ import ejsMate from "ejs-mate";
 import path from "path";
 import mongoose from "mongoose";
 import passport from "passport";
+import LocalStrategy from "passport-local";
+import passportLocalMongoose from "passport-local-mongoose";
 import { ExpressError } from "./utils/expressError.js";
 import session from "express-session";
 
@@ -13,6 +15,16 @@ import { default as homeRoute } from "./routes/indexRoutes.js";
 
 const app = express();
 const __dirname = path.resolve();
+
+app.use(
+  session({
+    secret: "bambinaBambinoLife.",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 main()
   .then(() => {
@@ -33,20 +45,6 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
-
-// Configure session
-app.use(
-  session({
-    secret: "bambinaBambinoLife",
-    resave: false,
-    saveUninitialized: true,
-  })
-);
-
-// Initialize Passport.js middleware
-//not using this.
-// app.use(passport.initialize());
-// app.use(passport.session());
 
 app.use("/", homeRoute);
 
