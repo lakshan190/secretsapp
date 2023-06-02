@@ -30,6 +30,7 @@ export const loginUser = async function (req, res, next) {
     const { username, password } = req.body;
     const newUSer = new User({ username, password });
 
+    //run below code as a middleware if it doesnt worn on the router
     req.login(newUSer, function (err) {
       //dont put two parameters for the callback function and res it will break the code
       if (err) {

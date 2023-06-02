@@ -2,6 +2,9 @@
 
 import express from "express";
 import passport from "passport";
+import LocalStrategy from "passport-local";
+import session from "express-session";
+import { User } from "../models/users.js";
 import {
   home,
   login,
@@ -25,5 +28,19 @@ router.get("/register", register).post("/register", createUser);
 router.get("/logout", logOut);
 
 router.get("/secrets", isUserLoggedIn);
+
+router.get(
+  "/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
+
+router.get(
+  "/auth/google/secrets",
+  passport.authenticate("google", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/secrets");
+  }
+);
 
 export default router;

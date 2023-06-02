@@ -10,6 +10,7 @@ import LocalStrategy from "passport-local";
 import passportLocalMongoose from "passport-local-mongoose";
 import { ExpressError } from "./utils/expressError.js";
 import session from "express-session";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 import { default as homeRoute } from "./routes/indexRoutes.js";
 
