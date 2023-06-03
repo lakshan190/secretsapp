@@ -15,6 +15,9 @@ import {
   createUser,
   loginUser,
   isUserLoggedIn,
+  userSubmit,
+  submittedSecret,
+  renderAllSecrets,
 } from "../controllers/userController.js";
 
 const router = express.Router();
@@ -27,7 +30,7 @@ router.get("/register", register).post("/register", createUser);
 
 router.get("/logout", logOut);
 
-router.get("/secrets", isUserLoggedIn);
+router.get("/secrets", isUserLoggedIn, renderAllSecrets);
 
 router.get(
   "/auth/google",
@@ -42,5 +45,18 @@ router.get(
     res.redirect("/secrets");
   }
 );
+
+router.get("/auth/facebook", passport.authenticate("facebook"));
+
+router.get(
+  "/auth/facebook/secrets",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  function (req, res) {
+    // Successful authentication, redirect home.
+    res.redirect("/secrets");
+  }
+);
+
+router.get("/submit", userSubmit).post("/submit", submittedSecret);
 
 export default router;

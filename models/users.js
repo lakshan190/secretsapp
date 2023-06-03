@@ -7,6 +7,7 @@ import path from "path";
 import passport from "passport";
 import passportLocalMongoose from "passport-local-mongoose";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { Strategy as FacebookStrategy } from "passport-facebook";
 import findOrCreatePlugin from "mongoose-findorcreate";
 
 const __dirname = path.resolve();
@@ -17,6 +18,8 @@ const userSchema = new Schema({
   username: { type: String },
   password: { type: String },
   googleId: { type: String },
+  facebookId: { type: String },
+  secret: { type: String },
 });
 
 //this plugin allows to hash and salt the passwords and save it to the mongodb database
@@ -64,6 +67,22 @@ passport.use(
     function (accessToken, refreshToken, profile, cb) {
       console.log(profile);
       User.findOrCreate({ googleId: profile.id }, function (err, user) {
+        return cb(err, user);
+      });
+    }
+  )
+);
+
+passport.use(
+  new FacebookStrategy(
+    {
+      clientID: process.env.FACEBOOK_APP_ID,
+      clientSecret: process.env.FACEBOOK_APP_SECRET,
+      callbackURL: "http://localhost:3000/auth/facebook/secrets",
+    },
+    function (accessToken, refreshToken, profile, cb) {
+      console.log(profile);
+      User.findOrCreate({ facebookId: profile.id }, function (err, user) {
         return cb(err, user);
       });
     }

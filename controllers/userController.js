@@ -50,9 +50,56 @@ export const loginUser = async function (req, res, next) {
 export const isUserLoggedIn = async (req, res, next) => {
   try {
     if (req.isAuthenticated()) {
-      res.render("secrets");
+      next();
     } else {
       res.render("login");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const userSubmit = async (req, res, next) => {
+  try {
+    if (req.isAuthenticated()) {
+      res.render("submit");
+    } else {
+      res.render("login");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const submittedSecret = async function (req, res, next) {
+  try {
+    const { secret } = req.body;
+    //passport saves user in the request object req.user
+
+    const user = await User.findById(req.user.id);
+    //you need to use id not _id from mongodb because we use google and facebbok auth aswell
+
+    if (user) {
+      user.secret = secret;
+      await user.save();
+      res.redirect("/secrets");
+    } else {
+      console.log("cannot find user id");
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const renderAllSecrets = async function (req, res, next) {
+  try {
+    const foundUsers = await User.find({ secret: { $ne: null } });
+    //goes through all our users and picks out users where their secrets field isnt null
+
+    if (foundUsers) {
+      res.render("secrets", { usersWithSecrets: foundUsers });
+    } else {
+      console.log("No users with secrets");
     }
   } catch (err) {
     console.log(err);
